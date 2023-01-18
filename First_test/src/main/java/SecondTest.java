@@ -1,6 +1,7 @@
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -9,6 +10,10 @@ import java.time.Duration;
 
 public class SecondTest {
     WebDriver driver = new ChromeDriver();
+    void scrollTo(int height){
+        JavascriptExecutor js = (JavascriptExecutor)driver;
+        js.executeScript("window.scrollBy(0, " + height + ")");
+    }
     /** Номера карт
      * 4004 1591 1544 9003
      * 01/2021   cvv - 301
@@ -31,6 +36,8 @@ public class SecondTest {
 
     By termsLink = By.xpath("//a[@href='https://privatbank.ua/terms']");
 
+    By termsLink = By.xpath("//path[@d='M0 0h24v24H0z']");
+
     //Cтраница проверки
     By category = By.xpath("//div[@data-qa-node='category']");
     By details = By.xpath("//div[@data-qa-node='details']");
@@ -43,26 +50,27 @@ public class SecondTest {
     void checkAddToBasketPaymentSum(){
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
         driver.get("https://next.privat24.ua/mobile");
-        driver.manage().window().fullscreen();
         driver.findElement(phoneNumber).sendKeys("985220645");
         driver.findElement(summa).sendKeys(Keys.chord(Keys.CONTROL, "a"), "55");
         driver.findElement(cardDebit).sendKeys("5309233034765085");
         driver.findElement(expireDebit).sendKeys("0124");
         driver.findElement(cvvDebit).sendKeys("891");
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(2));
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
         driver.findElement(firstNameDebit).sendKeys("TEST");
         driver.findElement(lastNameDebit).sendKeys("TESTOVICH");
         driver.findElement(submitBtn).submit();
+        //Assertions
+        Assertions.assertEquals("Поповнення мобільного", driver.findElement(category).getText());
+        Assertions.assertEquals("55 UAH", driver.findElement(checkSumma).getText());
     }
     @Test
     void checkTermsAndConditions() {
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
         driver.get("https://next.privat24.ua/mobile");
-
         driver.findElement(termsLink).click();
-        driver.manage().window().fullscreen();
         driver.switchTo().window(driver.getWindowHandles().toArray()[1].toString());
 
+        scrollTo(280);
 
         driver.switchTo().frame("frame");
 
@@ -71,5 +79,11 @@ public class SecondTest {
         Assertions.assertEquals("Умови та правила надання банківських послуг",
                 driver.findElement(By.xpath("//a[@href='/main/?lang=uk']")).getText());
         driver.quit();
+    }
+    @Test
+    void checkHideText(){
+
+
+
     }
 }
