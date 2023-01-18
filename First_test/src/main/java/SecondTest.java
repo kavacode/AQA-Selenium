@@ -36,8 +36,6 @@ public class SecondTest {
 
     By termsLink = By.xpath("//a[@href='https://privatbank.ua/terms']");
 
-    By termsLink = By.xpath("//path[@d='M0 0h24v24H0z']");
-
     //Cтраница проверки
     By category = By.xpath("//div[@data-qa-node='category']");
     By details = By.xpath("//div[@data-qa-node='details']");
@@ -82,7 +80,15 @@ public class SecondTest {
     }
     @Test
     void checkHideText(){
+        By hideLink = By.xpath("//path[@d='M0 0h24v24H0z']");
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
+        driver.get("https://next.privat24.ua/mobile");
+       //driver.findElement(By.cssSelector("body")).sendKeys(Keys.CONTROL, Keys.END);
+        JavascriptExecutor jse = (JavascriptExecutor)driver;
+        jse.executeScript("window.scrollBy(0,250)");
 
+        //scrollTo(-280);
+        //driver.findElement(hideLink).click();
 
 
     }
